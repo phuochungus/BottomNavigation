@@ -1,22 +1,15 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  useFocusEffect,
-  useNavigationContainerRef,
-  validatePathConfig,
-} from '@react-navigation/native';
-import {useCallback, useEffect, useState} from 'react';
-import {FlatList, View} from 'react-native';
-import ProductItem, {ProductItemI} from '../components/product';
-import {ProductContext} from '../../App';
+import {FlatList, StyleSheet, View} from 'react-native';
+import ProductItem from '../components/product';
+import {ProductContext, ThemeContext} from '../../App';
 import {useContext} from 'react';
 
 export default function FavouriteScreen(): JSX.Element {
   const {products} = useContext(ProductContext);
-
-  console.log('render from fav:');
+  const {theme} = useContext(ThemeContext);
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View
+      style={theme == 'light' ? styles.containterLight : styles.containerDark}>
       <FlatList
         renderItem={({item}) => {
           if (item.isChecked)
@@ -34,3 +27,15 @@ export default function FavouriteScreen(): JSX.Element {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  containterLight: {
+    backgroundColor: 'white',
+    flex: 1,
+  },
+
+  containerDark: {
+    backgroundColor: '#0A2647',
+    flex: 1,
+  },
+});

@@ -1,31 +1,38 @@
-import {FlatList, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import ProductItem from '../components/product';
-import {ProductContext} from '../../App';
+import {ProductContext, ThemeContext} from '../../App';
 import {useContext} from 'react';
 
 export default function HomeScreen(): JSX.Element {
   const {products} = useContext(ProductContext);
-
-  console.log('render from home:');
+  const {theme} = useContext(ThemeContext);
 
   return (
-    <View style={{flex: 1}}>
+    <View
+      style={theme == 'light' ? styles.containterLight : styles.containerDark}>
       <FlatList
-        keyExtractor={(item, index) => item.name}
+        keyExtractor={item => item.name}
         renderItem={({item}) => (
-          <>
-            <Text style={{color: 'red'}}>
-              {item.isChecked ? 'true' : 'false'}
-            </Text>
-            <ProductItem
-              name={item.name}
-              price={item.price}
-              isChecked={item.isChecked}
-            />
-          </>
+          <ProductItem
+            name={item.name}
+            price={item.price}
+            isChecked={item.isChecked}
+          />
         )}
         data={products}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  containterLight: {
+    backgroundColor: 'white',
+    flex: 1,
+  },
+
+  containerDark: {
+    backgroundColor: '#0A2647',
+    flex: 1,
+  },
+});

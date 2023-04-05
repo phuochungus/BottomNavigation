@@ -15,6 +15,7 @@ import {
   useState,
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {StyleSheet} from 'react-native';
 
 type RootTabParamList = {
   Home: undefined;
@@ -46,8 +47,22 @@ export const ProductContext = createContext<{
   },
 });
 
+export const ThemeContext = createContext<{
+  theme: string;
+  changeTheme: () => void;
+}>({
+  theme: '',
+  changeTheme: () => {},
+});
+
 function App(): JSX.Element {
   const [products, setProducts] = useState<ProductItemI[]>([]);
+  const [theme, setTheme] = useState('light');
+
+  const changeTheme = () => {
+    if (theme == 'light') setTheme('dark');
+    else setTheme('light');
+  };
 
   useEffect(() => {
     AsyncStorage.getAllKeys().then((keys: readonly string[]) => {
@@ -74,14 +89,39 @@ function App(): JSX.Element {
 
   return (
     <ProductContext.Provider value={{products, setProducts}}>
-      <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen name="Home" component={HomeScreen} />
-          <Tab.Screen name="Favourites" component={FavouritesScreen} />
-          <Tab.Screen name="Settings" component={SettingsScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
+      <ThemeContext.Provider value={{theme, changeTheme}}>
+        <NavigationContainer>
+          <Tab.Navigator
+            screenOptions={{
+              headerTitleStyle: styles.headerTextStyle,
+              headerStyle: styles.headerStyle,
+              tabBarStyle: styles.tabBarLight,
+
+              tabBarActiveTintColor: 'black',
+              tabBarInactiveTintColor: 'black',
+            }}>
+            <Tab.Screen name="Home" component={HomeScreen} />
+            <Tab.Screen name="Favourites" component={FavouritesScreen} />
+            <Tab.Screen name="Settings" component={SettingsScreen} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </ThemeContext.Provider>
     </ProductContext.Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  headerStyle: {
+    backgroundColor: '#262A56',
+  },
+
+  headerTextStyle: {
+    color: 'white',
+  },
+
+  tabBarLight: {
+    backgroundColor: '#6D67E4',
+  },
+});
+
 export default App;

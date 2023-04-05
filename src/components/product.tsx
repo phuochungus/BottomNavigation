@@ -2,7 +2,7 @@ import {View, Image, Text, StyleSheet} from 'react-native';
 import React, {useContext} from 'react';
 import {IMG_PRODUCT} from '../../assets/images';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ProductContext} from '../../App';
+import {ProductContext, ThemeContext} from '../../App';
 import CheckBox from '@react-native-community/checkbox';
 
 export interface ProductItemI {
@@ -41,13 +41,10 @@ export default function ProductItem(product: ProductItemI) {
     );
   };
 
+  const {theme} = useContext(ThemeContext);
   return (
     <View
-      style={{
-        flexDirection: 'row',
-        backgroundColor: 'black',
-        margin: 20,
-      }}>
+      style={theme == 'light' ? styles.containerLight : styles.containerDark}>
       <Image source={IMG_PRODUCT} style={{height: 100, width: 100}} />
       <View style={styles.verticalLine} />
       <View style={{flexDirection: 'column', justifyContent: 'space-evenly'}}>
@@ -88,5 +85,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginLeft: 20,
     marginRight: 20,
+  },
+  containerLight: {
+    flexDirection: 'row',
+    backgroundColor: 'black',
+    margin: 20,
+  },
+  containerDark: {
+    flexDirection: 'row',
+    backgroundColor: '#144272',
+    margin: 20,
   },
 });
